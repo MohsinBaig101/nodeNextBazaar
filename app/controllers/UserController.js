@@ -26,22 +26,32 @@ module.exports = {
                 bcrypt.compare(req.body.password,users.password,(err,result)=>{
                     if(result){
                         jwt.sign({ foo: 'bar' }, process.env.TOKEN_SECRET, { algorithm: 'HS256' }, function(err, token) {
-                            
-                            return res.status(200).send({
-                                'message':'Correct Credentials',
-                                'token' : token,
-                                'error':err
-                            });
+                            let data = {
+                                token : token
+                            };
+                            let message = 'Login Successfully';
+                            return Helper.apiResponse(req,res,200,true,data,message);
+                            // return res.status(200).send({
+                            //     'message':'Correct Credentials',
+                            //     'token' : token,
+                            //     'error':err
+                            // });
                         });
                     }else{
-                        return res.status(400).send('Invalid Credentials');
+                        let message = 'Invalid Credentials';
+                        return Helper.apiResponse(req,res,400,false,null,message);
+                        // return res.status(400).send('Invalid Credentials');
                     }
                 });
             }else{   
-                return res.status(400).send('Invalid Credentials');
+                let message = 'Invalid Credentials';
+                return Helper.apiResponse(req,res,400,false,null,message);
+                // return res.status(400).send('Invalid Credentials');
             }
         }catch(error){
-            return res.status(400).send('Error'+error);
+            let message = 'Invalid Credentials';
+            return Helper.apiResponse(req,res,400,false,null,message);
+            // return res.status(400).send('Error'+error);
         }
     },
 
