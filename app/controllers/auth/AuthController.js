@@ -1,13 +1,8 @@
 const User = require('../../models/User.modal');
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
-const { validationResult } = require('express-validator');
 module.exports = {
     login : async (req,res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return Helper.apiResponse(req,res,400,false,errors,'Validation Error');
-        }
         try{
             const users = await User.findOne({'name':req.body.name}).exec();
             if(users){
@@ -41,6 +36,7 @@ module.exports = {
             const hash = await bcrypt.hash(req.body.password,10);
             user.name = req.body.name;
             user.password = hash;
+            user.email = req.body.email
             user.save(user);
             return Helper.apiResponse(req,res,200,true,null,'Record Saved Successfully');
         } catch (error) {
