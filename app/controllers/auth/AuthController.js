@@ -1,27 +1,15 @@
-const userModal = require('../models/User.modal');
+const User = require('../../models/User.modal');
 const bcrypt = require('bcrypt');
-const user = require('../routes/user');
 var jwt = require('jsonwebtoken');
-
+const { validationResult } = require('express-validator');
 module.exports = {
-    // Retrieve and return records from the database.
-    /**
-     * @param req
-     * @param res
-     * @param next
-     * @returns {Promise<void>}
-     */
-    getUsers: async (req,res,next) => {
-        try{
-            const users = await userModal.find({}).exec();
-            return Helper.apiResponse(req,res,200,true,users,message);
-        }catch(err){
-            return Helper.apiResponse(req,res,400,false,null,'Error');
-        }
-    },
     login : async (req,res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return Helper.apiResponse(req,res,400,false,errors,'Validation Error');
+        }
         try{
-            const users = await userModal.findOne({'name':req.body.name}).exec();
+            const users = await User.findOne({'name':req.body.name}).exec();
             if(users){
                 bcrypt.compare(req.body.password,users.password,(err,result)=>{
                     if(result){
@@ -47,9 +35,9 @@ module.exports = {
         }
     },
 
-    saveUsers: async (req, res, next) => {
+    register: async (req, res, next) => {
         try {
-            let user = new userModal();
+            let user = new User();
             const hash = await bcrypt.hash(req.body.password,10);
             user.name = req.body.name;
             user.password = hash;
