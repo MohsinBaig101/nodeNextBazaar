@@ -1,0 +1,2 @@
+{"_id":{"$oid":"5f917a7394856ad96711f1e8"},"name":"User List","key":"user-list"}
+{"_id":{"$oid":"5f917a8a94856ad96711f1e9"},"name":"Create Ads","key":"ad-create"}

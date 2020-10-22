@@ -1,0 +1,2 @@
+{"_id":{"$oid":"5f9179b094856ad96711f1e7"},"name":"Admin","key":"admin","permissions":[{"$oid":"5f917a7394856ad96711f1e8"},{"$oid":"5f917a8a94856ad96711f1e9"}]}
+{"_id":{"$oid":"5f917b3494856ad96711f1ea"},"name":"Client","key":"client","permissions":[""]}

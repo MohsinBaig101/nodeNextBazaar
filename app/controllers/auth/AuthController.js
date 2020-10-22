@@ -8,7 +8,7 @@ module.exports = {
             if(users){
                 bcrypt.compare(req.body.password,users.password,(err,result)=>{
                     if(result){
-                        jwt.sign({ foo: 'bar' }, process.env.TOKEN_SECRET, { algorithm: 'HS256' }, function(err, token) {
+                        jwt.sign({ loggedInUser: users }, process.env.TOKEN_SECRET, { algorithm: 'HS256' }, function(err, token) {
                             let data = {
                                 token : token
                             };

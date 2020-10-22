@@ -14,9 +14,10 @@ module.exports = {
     getUsers: async (req,res,next) => {
         try{
             const users = await userModal.find({}).exec();
-            return Helper.apiResponse(req,res,200,true,users,message);
+          
+            return Helper.apiResponse(req,res,200,true,users,'message');
         }catch(err){
-            return Helper.apiResponse(req,res,400,false,null,'Error');
+            return Helper.apiResponse(req,res,400,false,err,'Error');
         }
     },
     login : async (req,res) => {

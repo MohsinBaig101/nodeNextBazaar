@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
     if (authType !== 'Bearer') throw new Error('Expected a Bearer token')
 
     jwt.verify(token, process.env.TOKEN_SECRET, function(err, decoded) {
-        if(decoded.foo){  
+        if(decoded.loggedInUser){  
             next();
         }else{
             return res.status(401).send({'message':'Token is Invalid'});

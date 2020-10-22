@@ -7,6 +7,7 @@ var userSchema = new Schema({
   name: {type : String,required:true},
   email :{type:String,require:true},
   password: {type : String,required:true},
+  roles : {type:Array}
 });
 const userModal = mongoose.model('User', userSchema );
 module.exports = userModal;
