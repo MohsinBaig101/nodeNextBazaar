@@ -4,16 +4,17 @@ var jwt = require('jsonwebtoken');
 module.exports = {
     login : async (req,res) => {
         try{
-            const users = await User.findOne({'name':req.body.name}).exec();
+            const users = await User.findOne({'name':req.body.name}).populate('roles').exec();
             if(users){
                 bcrypt.compare(req.body.password,users.password,(err,result)=>{
                     if(result){
                         jwt.sign({ loggedInUser: users }, process.env.TOKEN_SECRET, { algorithm: 'HS256' }, function(err, token) {
                             let data = {
-                                token : token
+                                token : token,
+                                data : users
                             };
                             let message = 'Login Successfully';
-                            return Helper.apiResponse(req,res,200,true,data,message);
+                            return Helper.apiResponse(req,res,200,true,null,message);
                         });
                     }else{
                         let message = 'Invalid Credentials';
@@ -26,7 +27,7 @@ module.exports = {
             }
         }catch(error){
             let message = 'Invalid Credentials';
-            return Helper.apiResponse(req,res,400,false,null,message);
+            return Helper.apiResponse(req,res,400,false,error,message);
         }
     },
 
