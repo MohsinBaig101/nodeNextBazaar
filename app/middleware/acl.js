@@ -1,24 +1,36 @@
 const jwt = require('jsonwebtoken');
-module.exports = async (req, res, next,e) => {
+module.exports = async (req, res, next,routeRoule) => {
     try {
       
       const { authorization } = req.headers
       const [authType, token] = authorization.trim().split(' ')
-      if (authType !== 'Bearer') throw new Error('Expected a Bearer token')
+      if (authType !== 'Bearer') return Helper.apiResponse(req,res,400,false,null,'Expected a bearer token');
 
       jwt.verify(token, process.env.TOKEN_SECRET, function(err, decoded) {
           if(decoded.loggedInUser){  
               if(decoded.loggedInUser.roles.length > 0){
-                 next();
+                 let roles = decoded.loggedInUser.roles;
+                 let matchedCheck = false;
+                 roles.forEach(element => {
+                  routeRoule.forEach(routeR => {
+                      if(element.key === routeR){
+                        matchedCheck = true;
+                      }
+                    });
+                 });
+                 if(matchedCheck === true) {
+                   next();
+                  }else{
+                    return Helper.apiResponse(req,res,400,false,null,'Your are Accessing unauthorized area');
+                  }
               }else{
-                return res.status(401).send({'message':'Your are Accessing unauthorized area'});
+                return Helper.apiResponse(req,res,400,false,null,'Your are Accessing unauthorized area');
               }
-              next();
           }else{
-              return res.status(401).send({'message':'Token is Invalid'});
+            return Helper.apiResponse(req,res,400,false,null,'Token is Invalid');
           }
       });
     } catch (error) {
-      next(error.message)
+        return Helper.apiResponse(req,res,400,false,error,'');
     }
 }
