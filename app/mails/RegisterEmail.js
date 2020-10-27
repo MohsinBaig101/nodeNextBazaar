@@ -9,7 +9,7 @@ function main(next) {
                 text: "Hello world?", // plain text body
                 html: "<b>Hello world?</b>", // html body
             },function(err){
-                console.log(err);
+                console.log(err+"123");
             });
             next();
 }

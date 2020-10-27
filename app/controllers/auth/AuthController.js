@@ -7,7 +7,7 @@ const { find } = require('../../models/Role.modal');
 module.exports = {
     login : async (req,res,next) => {
         try{
-            const users = await User.findOne({'name':req.body.name}).populate('roles').exec();
+            const users = await User.findOne({'email':req.body.email}).populate('roles').exec();
             if(users){
                 bcrypt.compare(req.body.password,users.password,(err,result)=>{
                     if(result){
@@ -16,7 +16,7 @@ module.exports = {
                                 token : token
                             };
                             let message = 'Login Successfully';
-                            RegisterMail.sendMail(next);
+                            
                             return Helper.apiResponse(req,res,200,true,data,message);
                         });
                     }else{
@@ -46,7 +46,10 @@ module.exports = {
                     role._id
                 ];
                 user.email = req.body.email;
-                user.save(user);
+                user.save(user).then(()=>{
+                    RegisterMail.sendMail(next);
+                })
+               
                 return Helper.apiResponse(req,res,200,true,null,'Record Saved Successfully');
             }else{
                 let roleSave = new Role({
@@ -64,7 +67,9 @@ module.exports = {
                     user.roles = [
                         roleSave._id
                     ];
-                    user.save(user);
+                    user.save(user).then(()=>{
+                        RegisterMail.sendMail(next);
+                    });
                     return Helper.apiResponse(req,res,200,true,null,'Record Saved Successfully');
                 })
                 

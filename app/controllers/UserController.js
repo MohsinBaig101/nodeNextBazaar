@@ -13,7 +13,7 @@ module.exports = {
      */
     getUsers: async (req,res,next) => {
         try{
-            const users = await userModal.find({},'name email').exec();
+            const users = await userModal.find({},'name email');
             return Helper.apiResponse(req,res,200,true,users,'message');
         }catch(err){
             return Helper.apiResponse(req,res,400,false,err,'Error');
